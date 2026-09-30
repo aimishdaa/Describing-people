@@ -1,0 +1,834 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interactive Mystery Neighbour Creator</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700&family=Quicksand:wght@500;700&display=swap" rel="stylesheet">
+    
+    <style>
+        body {
+            font-family: 'Quicksand', sans-serif;
+            user-select: none;
+        }
+        h1, h2, h3, .font-heading {
+            font-family: 'Fredoka', cursive;
+        }
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f1f5f9;
+            border-radius: 8px;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 8px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8;
+        }
+        .pop-in {
+            animation: popIn 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        @keyframes popIn {
+            0% { transform: scale(0.8); opacity: 0; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+    </style>
+</head>
+<body class="bg-amber-50 min-h-screen text-slate-800 flex flex-col justify-between">
+
+    <header class="bg-gradient-to-r from-teal-500 via-emerald-500 to-indigo-600 text-white p-4 shadow-lg">
+        <div class="max-w-7xl mx-auto flex flex-col sm:flex-row justify-between items-center gap-3">
+            <div class="flex items-center space-x-3">
+                <div class="bg-white/20 p-3 rounded-2xl backdrop-blur-md">
+                    <i class="fa-solid fa-user-ninja text-3xl text-yellow-300"></i>
+                </div>
+                <div>
+                    <h1 class="text-2xl md:text-3xl font-bold tracking-wide">Describe Our Neighbour!</h1>
+                    <p class="text-xs md:text-sm text-teal-100">Interactive Primary ESL Vocabulary & Appearance Practice</p>
+                </div>
+            </div>
+
+            <!-- Pronoun Toggle (He / She) -->
+            <div class="flex items-center bg-white/10 p-1.5 rounded-2xl backdrop-blur-md border border-white/20 space-x-2">
+                <span class="text-xs font-semibold uppercase tracking-wider px-2 text-teal-100">Pronoun:</span>
+                <button id="btn-he" onclick="setPronoun('He')" class="px-5 py-1.5 rounded-xl font-bold transition-all bg-yellow-400 text-slate-900 shadow">He</button>
+                <button id="btn-she" onclick="setPronoun('She')" class="px-5 py-1.5 rounded-xl font-bold transition-all text-white hover:bg-white/20">She</button>
+            </div>
+        </div>
+    </header>
+
+    <main class="max-w-7xl mx-auto w-full p-3 md:p-6 flex-grow grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+
+        <!-- LEFT PANEL: CONTROL BUTTONS (FACIAL FEATURES & ACCESSORIES) -->
+        <section class="lg:col-span-7 bg-white rounded-3xl p-4 md:p-6 shadow-xl border-2 border-teal-100 space-y-6">
+            
+            <!-- Category 1: Facial Features -->
+            <div>
+                <div class="flex justify-between items-center mb-3">
+                    <h2 class="text-lg font-bold text-teal-700 flex items-center gap-2">
+                        <i class="fa-solid fa-face-smile text-amber-500"></i> Facial Features
+                    </h2>
+                    <span class="text-xs font-bold text-slate-400 bg-slate-100 px-2.5 py-1 rounded-lg">Has...</span>
+                </div>
+                <div class="grid grid-cols-2 sm:grid-cols-3 gap-2.5">
+                    
+                    <!-- Freckles -->
+                    <div id="card-freckles" class="flex items-center justify-between p-2.5 rounded-2xl border-2 border-slate-200 bg-slate-50 hover:border-teal-300 transition-all">
+                        <button onclick="toggleFeature('freckles')" class="flex items-center space-x-2 flex-grow text-left">
+                            <span class="text-lg">✨</span>
+                            <span class="font-bold text-sm text-slate-700">Freckles</span>
+                        </button>
+                        <div class="flex items-center space-x-1">
+                            <button onclick="showPhoto('freckles')" title="View Direct Photo" class="text-teal-600 hover:bg-teal-100 p-1.5 rounded-lg transition-all">
+                                <i class="fa-solid fa-camera text-xs"></i>
+                            </button>
+                            <button onclick="speakText('Freckles')" title="Listen" class="text-slate-400 hover:text-teal-600 p-1.5 rounded-lg transition-all">
+                                <i class="fa-solid fa-volume-high text-xs"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Mole -->
+                    <div id="card-mole" class="flex items-center justify-between p-2.5 rounded-2xl border-2 border-slate-200 bg-slate-50 hover:border-teal-300 transition-all">
+                        <button onclick="toggleFeature('mole')" class="flex items-center space-x-2 flex-grow text-left">
+                            <span class="text-lg">⚫</span>
+                            <span class="font-bold text-sm text-slate-700">Mole</span>
+                        </button>
+                        <div class="flex items-center space-x-1">
+                            <button onclick="showPhoto('mole')" title="View Direct Photo" class="text-teal-600 hover:bg-teal-100 p-1.5 rounded-lg transition-all">
+                                <i class="fa-solid fa-camera text-xs"></i>
+                            </button>
+                            <button onclick="speakText('Mole')" title="Listen" class="text-slate-400 hover:text-teal-600 p-1.5 rounded-lg transition-all">
+                                <i class="fa-solid fa-volume-high text-xs"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Dimples -->
+                    <div id="card-dimples" class="flex items-center justify-between p-2.5 rounded-2xl border-2 border-slate-200 bg-slate-50 hover:border-teal-300 transition-all">
+                        <button onclick="toggleFeature('dimples')" class="flex items-center space-x-2 flex-grow text-left">
+                            <span class="text-lg">😊</span>
+                            <span class="font-bold text-sm text-slate-700">Dimples</span>
+                        </button>
+                        <div class="flex items-center space-x-1">
+                            <button onclick="showPhoto('dimples')" title="View Direct Photo" class="text-teal-600 hover:bg-teal-100 p-1.5 rounded-lg transition-all">
+                                <i class="fa-solid fa-camera text-xs"></i>
+                            </button>
+                            <button onclick="speakText('Dimples')" title="Listen" class="text-slate-400 hover:text-teal-600 p-1.5 rounded-lg transition-all">
+                                <i class="fa-solid fa-volume-high text-xs"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Beard -->
+                    <div id="card-beard" class="flex items-center justify-between p-2.5 rounded-2xl border-2 border-slate-200 bg-slate-50 hover:border-teal-300 transition-all">
+                        <button onclick="toggleFeature('beard')" class="flex items-center space-x-2 flex-grow text-left">
+                            <span class="text-lg">🧔</span>
+                            <span class="font-bold text-sm text-slate-700">Beard</span>
+                        </button>
+                        <div class="flex items-center space-x-1">
+                            <button onclick="showPhoto('beard')" title="View Direct Photo" class="text-teal-600 hover:bg-teal-100 p-1.5 rounded-lg transition-all">
+                                <i class="fa-solid fa-camera text-xs"></i>
+                            </button>
+                            <button onclick="speakText('Beard')" title="Listen" class="text-slate-400 hover:text-teal-600 p-1.5 rounded-lg transition-all">
+                                <i class="fa-solid fa-volume-high text-xs"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Moustache -->
+                    <div id="card-moustache" class="flex items-center justify-between p-2.5 rounded-2xl border-2 border-slate-200 bg-slate-50 hover:border-teal-300 transition-all sm:col-span-2">
+                        <button onclick="toggleFeature('moustache')" class="flex items-center space-x-2 flex-grow text-left">
+                            <span class="text-lg">👨‍🦰</span>
+                            <span class="font-bold text-sm text-slate-700">Moustache</span>
+                        </button>
+                        <div class="flex items-center space-x-1">
+                            <button onclick="showPhoto('moustache')" title="View Direct Photo" class="text-teal-600 hover:bg-teal-100 p-1.5 rounded-lg transition-all">
+                                <i class="fa-solid fa-camera text-xs"></i>
+                            </button>
+                            <button onclick="speakText('Moustache')" title="Listen" class="text-slate-400 hover:text-teal-600 p-1.5 rounded-lg transition-all">
+                                <i class="fa-solid fa-volume-high text-xs"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div>
+                <div class="flex justify-between items-center mb-3">
+                    <h2 class="text-lg font-bold text-indigo-700 flex items-center gap-2">
+                        <i class="fa-solid fa-glasses text-indigo-500"></i> Accessories
+                    </h2>
+                    <span class="text-xs font-bold text-slate-400 bg-slate-100 px-2.5 py-1 rounded-lg">Wearing...</span>
+                </div>
+                <div class="grid grid-cols-2 sm:grid-cols-3 gap-2.5">
+                    
+                    <!-- Glasses -->
+                    <div id="card-glasses" class="flex items-center justify-between p-2.5 rounded-2xl border-2 border-slate-200 bg-slate-50 hover:border-indigo-300 transition-all">
+                        <button onclick="toggleFeature('glasses')" class="flex items-center space-x-2 flex-grow text-left">
+                            <span class="text-lg">👓</span>
+                            <span class="font-bold text-sm text-slate-700">Glasses</span>
+                        </button>
+                        <div class="flex items-center space-x-1">
+                            <button onclick="showPhoto('glasses')" title="View Direct Photo" class="text-indigo-600 hover:bg-indigo-100 p-1.5 rounded-lg transition-all">
+                                <i class="fa-solid fa-camera text-xs"></i>
+                            </button>
+                            <button onclick="speakText('Glasses')" title="Listen" class="text-slate-400 hover:text-indigo-600 p-1.5 rounded-lg transition-all">
+                                <i class="fa-solid fa-volume-high text-xs"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Sunglasses -->
+                    <div id="card-sunglasses" class="flex items-center justify-between p-2.5 rounded-2xl border-2 border-slate-200 bg-slate-50 hover:border-indigo-300 transition-all">
+                        <button onclick="toggleFeature('sunglasses')" class="flex items-center space-x-2 flex-grow text-left">
+                            <span class="text-lg">🕶️</span>
+                            <span class="font-bold text-sm text-slate-700">Sunglasses</span>
+                        </button>
+                        <div class="flex items-center space-x-1">
+                            <button onclick="showPhoto('sunglasses')" title="View Direct Photo" class="text-indigo-600 hover:bg-indigo-100 p-1.5 rounded-lg transition-all">
+                                <i class="fa-solid fa-camera text-xs"></i>
+                            </button>
+                            <button onclick="speakText('Sunglasses')" title="Listen" class="text-slate-400 hover:text-indigo-600 p-1.5 rounded-lg transition-all">
+                                <i class="fa-solid fa-volume-high text-xs"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Necklace -->
+                    <div id="card-necklace" class="flex items-center justify-between p-2.5 rounded-2xl border-2 border-slate-200 bg-slate-50 hover:border-indigo-300 transition-all">
+                        <button onclick="toggleFeature('necklace')" class="flex items-center space-x-2 flex-grow text-left">
+                            <span class="text-lg">📿</span>
+                            <span class="font-bold text-sm text-slate-700">Necklace</span>
+                        </button>
+                        <div class="flex items-center space-x-1">
+                            <button onclick="showPhoto('necklace')" title="View Direct Photo" class="text-indigo-600 hover:bg-indigo-100 p-1.5 rounded-lg transition-all">
+                                <i class="fa-solid fa-camera text-xs"></i>
+                            </button>
+                            <button onclick="speakText('Necklace')" title="Listen" class="text-slate-400 hover:text-indigo-600 p-1.5 rounded-lg transition-all">
+                                <i class="fa-solid fa-volume-high text-xs"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Earrings -->
+                    <div id="card-earrings" class="flex items-center justify-between p-2.5 rounded-2xl border-2 border-slate-200 bg-slate-50 hover:border-indigo-300 transition-all">
+                        <button onclick="toggleFeature('earrings')" class="flex items-center space-x-2 flex-grow text-left">
+                            <span class="text-lg">💎</span>
+                            <span class="font-bold text-sm text-slate-700">Earrings</span>
+                        </button>
+                        <div class="flex items-center space-x-1">
+                            <button onclick="showPhoto('earrings')" title="View Direct Photo" class="text-indigo-600 hover:bg-indigo-100 p-1.5 rounded-lg transition-all">
+                                <i class="fa-solid fa-camera text-xs"></i>
+                            </button>
+                            <button onclick="speakText('Earrings')" title="Listen" class="text-slate-400 hover:text-indigo-600 p-1.5 rounded-lg transition-all">
+                                <i class="fa-solid fa-volume-high text-xs"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Watch -->
+                    <div id="card-watch" class="flex items-center justify-between p-2.5 rounded-2xl border-2 border-slate-200 bg-slate-50 hover:border-indigo-300 transition-all">
+                        <button onclick="toggleFeature('watch')" class="flex items-center space-x-2 flex-grow text-left">
+                            <span class="text-lg">⌚</span>
+                            <span class="font-bold text-sm text-slate-700">Watch</span>
+                        </button>
+                        <div class="flex items-center space-x-1">
+                            <button onclick="showPhoto('watch')" title="View Direct Photo" class="text-indigo-600 hover:bg-indigo-100 p-1.5 rounded-lg transition-all">
+                                <i class="fa-solid fa-camera text-xs"></i>
+                            </button>
+                            <button onclick="speakText('Watch')" title="Listen" class="text-slate-400 hover:text-indigo-600 p-1.5 rounded-lg transition-all">
+                                <i class="fa-solid fa-volume-high text-xs"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Bracelet -->
+                    <div id="card-bracelet" class="flex items-center justify-between p-2.5 rounded-2xl border-2 border-slate-200 bg-slate-50 hover:border-indigo-300 transition-all">
+                        <button onclick="toggleFeature('bracelet')" class="flex items-center space-x-2 flex-grow text-left">
+                            <span class="text-lg">💫</span>
+                            <span class="font-bold text-sm text-slate-700">Bracelet</span>
+                        </button>
+                        <div class="flex items-center space-x-1">
+                            <button onclick="showPhoto('bracelet')" title="View Direct Photo" class="text-indigo-600 hover:bg-indigo-100 p-1.5 rounded-lg transition-all">
+                                <i class="fa-solid fa-camera text-xs"></i>
+                            </button>
+                            <button onclick="speakText('Bracelet')" title="Listen" class="text-slate-400 hover:text-indigo-600 p-1.5 rounded-lg transition-all">
+                                <i class="fa-solid fa-volume-high text-xs"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Hat -->
+                    <div id="card-hat" class="flex items-center justify-between p-2.5 rounded-2xl border-2 border-slate-200 bg-slate-50 hover:border-indigo-300 transition-all">
+                        <button onclick="toggleFeature('hat')" class="flex items-center space-x-2 flex-grow text-left">
+                            <span class="text-lg">👒</span>
+                            <span class="font-bold text-sm text-slate-700">Hat</span>
+                        </button>
+                        <div class="flex items-center space-x-1">
+                            <button onclick="showPhoto('hat')" title="View Direct Photo" class="text-indigo-600 hover:bg-indigo-100 p-1.5 rounded-lg transition-all">
+                                <i class="fa-solid fa-camera text-xs"></i>
+                            </button>
+                            <button onclick="speakText('Hat')" title="Listen" class="text-slate-400 hover:text-indigo-600 p-1.5 rounded-lg transition-all">
+                                <i class="fa-solid fa-volume-high text-xs"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Cap -->
+                    <div id="card-cap" class="flex items-center justify-between p-2.5 rounded-2xl border-2 border-slate-200 bg-slate-50 hover:border-indigo-300 transition-all">
+                        <button onclick="toggleFeature('cap')" class="flex items-center space-x-2 flex-grow text-left">
+                            <span class="text-lg">🧢</span>
+                            <span class="font-bold text-sm text-slate-700">Cap</span>
+                        </button>
+                        <div class="flex items-center space-x-1">
+                            <button onclick="showPhoto('cap')" title="View Direct Photo" class="text-indigo-600 hover:bg-indigo-100 p-1.5 rounded-lg transition-all">
+                                <i class="fa-solid fa-camera text-xs"></i>
+                            </button>
+                            <button onclick="speakText('Cap')" title="Listen" class="text-slate-400 hover:text-indigo-600 p-1.5 rounded-lg transition-all">
+                                <i class="fa-solid fa-volume-high text-xs"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Scarf -->
+                    <div id="card-scarf" class="flex items-center justify-between p-2.5 rounded-2xl border-2 border-slate-200 bg-slate-50 hover:border-indigo-300 transition-all">
+                        <button onclick="toggleFeature('scarf')" class="flex items-center space-x-2 flex-grow text-left">
+                            <span class="text-lg">🧣</span>
+                            <span class="font-bold text-sm text-slate-700">Scarf</span>
+                        </button>
+                        <div class="flex items-center space-x-1">
+                            <button onclick="showPhoto('scarf')" title="View Direct Photo" class="text-indigo-600 hover:bg-indigo-100 p-1.5 rounded-lg transition-all">
+                                <i class="fa-solid fa-camera text-xs"></i>
+                            </button>
+                            <button onclick="speakText('Scarf')" title="Listen" class="text-slate-400 hover:text-indigo-600 p-1.5 rounded-lg transition-all">
+                                <i class="fa-solid fa-volume-high text-xs"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Belt -->
+                    <div id="card-belt" class="flex items-center justify-between p-2.5 rounded-2xl border-2 border-slate-200 bg-slate-50 hover:border-indigo-300 transition-all sm:col-span-3">
+                        <button onclick="toggleFeature('belt')" class="flex items-center space-x-2 flex-grow text-left">
+                            <span class="text-lg">🥋</span>
+                            <span class="font-bold text-sm text-slate-700">Belt</span>
+                        </button>
+                        <div class="flex items-center space-x-1">
+                            <button onclick="showPhoto('belt')" title="View Direct Photo" class="text-indigo-600 hover:bg-indigo-100 p-1.5 rounded-lg transition-all">
+                                <i class="fa-solid fa-camera text-xs"></i>
+                            </button>
+                            <button onclick="speakText('Belt')" title="Listen" class="text-slate-400 hover:text-indigo-600 p-1.5 rounded-lg transition-all">
+                                <i class="fa-solid fa-volume-high text-xs"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+        </section>
+
+        <!-- RIGHT PANEL: INTERACTIVE CHARACTER CANVAS & QUIZ CONTROLS -->
+        <section class="lg:col-span-5 flex flex-col items-center space-y-4 w-full">
+            
+            <div class="relative w-full max-w-md bg-gradient-to-b from-sky-100 via-indigo-50 to-amber-50 rounded-3xl p-6 shadow-xl border-4 border-white flex flex-col items-center">
+                
+                <!-- Status Badge -->
+                <div id="quiz-badge" class="hidden absolute top-4 left-4 bg-amber-500 text-white text-xs font-bold px-3 py-1.5 rounded-full shadow-md animate-pulse z-10">
+                    <i class="fa-solid fa-circle-question mr-1"></i> Mystery Mode!
+                </div>
+
+                <!-- SVG Character Display Canvas -->
+                <div class="w-full aspect-[4/5] relative flex justify-center items-center">
+                    <svg id="character-canvas" viewBox="0 0 400 500" class="w-full h-full drop-shadow-md">
+                        
+                        <!-- Base Body Background & Shoulders -->
+                        <path id="svg-shoulders" d="M 110,480 C 110,380 160,350 200,350 C 240,350 290,380 290,480 Z" fill="#38bdf8"/>
+                        <path id="svg-neck" d="M 175,290 L 225,290 L 225,360 L 175,360 Z" fill="#f8fafc"/>
+
+                        <!-- Ears -->
+                        <circle cx="105" cy="200" r="18" fill="#e2e8f0"/>
+                        <circle cx="295" cy="200" r="18" fill="#e2e8f0"/>
+
+                        <!-- Base Head Oval -->
+                        <ellipse id="svg-head" cx="200" cy="200" rx="90" ry="110" fill="#f1f5f9" class="stroke-slate-300 stroke-2"/>
+
+                        <!-- Eyes -->
+                        <g id="svg-eyes">
+                            <ellipse cx="160" cy="180" rx="12" ry="14" fill="#ffffff"/>
+                            <ellipse cx="240" cy="180" rx="12" ry="14" fill="#ffffff"/>
+                            <circle cx="160" cy="182" r="7" fill="#1e293b"/>
+                            <circle cx="240" cy="182" r="7" fill="#1e293b"/>
+                            <circle cx="158" cy="179" r="2.5" fill="#ffffff"/>
+                            <circle cx="238" cy="179" r="2.5" fill="#ffffff"/>
+                            <!-- Eyebrows -->
+                            <path d="M 142,158 Q 160,150 178,158" stroke="#334155" stroke-width="4" stroke-linecap="round" fill="none"/>
+                            <path d="M 222,158 Q 240,150 258,158" stroke="#334155" stroke-width="4" stroke-linecap="round" fill="none"/>
+                        </g>
+
+                        <!-- Nose -->
+                        <path d="M 200,185 Q 206,210 198,215 Q 208,216 208,210" stroke="#94a3b8" stroke-width="3.5" stroke-linecap="round" fill="none"/>
+
+                        <!-- Mouth / Smile -->
+                        <path id="svg-mouth" d="M 170,250 Q 200,275 230,250" stroke="#e11d48" stroke-width="4.5" stroke-linecap="round" fill="none"/>
+
+                        <!-- Standard Short Hair (He) -->
+                        <path id="hair-style-short" d="M 110,180 C 100,100 150,70 200,70 C 250,70 300,100 290,180 C 270,130 230,120 200,120 C 170,120 130,130 110,180 Z" fill="#475569"/>
+
+                        <!-- Long Hair Style (She) -->
+                        <path id="hair-style-long" class="hidden" d="M 100,180 C 90,80 150,50 200,50 C 250,50 310,80 300,180 C 310,250 315,340 295,380 C 285,310 270,220 265,180 C 240,120 160,120 135,180 C 130,220 115,310 105,380 C 85,340 90,250 100,180 Z" fill="#475569"/>
+
+                        <!-- LAYER OVERLAYS: FACIAL FEATURES -->
+
+                        <!-- Dimples Layer -->
+                        <g id="overlay-dimples" class="hidden pop-in">
+                            <path d="M 140,245 Q 145,255 142,265" stroke="#f43f5e" stroke-width="4" stroke-linecap="round" fill="none" opacity="0.85"/>
+                            <path d="M 260,245 Q 255,255 258,265" stroke="#f43f5e" stroke-width="4" stroke-linecap="round" fill="none" opacity="0.85"/>
+                        </g>
+
+                        <!-- Freckles Layer -->
+                        <g id="overlay-freckles" class="hidden pop-in" fill="#78350f" opacity="0.9">
+                            <circle cx="145" cy="210" r="2.5"/><circle cx="155" cy="205" r="2"/><circle cx="165" cy="212" r="2.5"/><circle cx="150" cy="218" r="2"/><circle cx="160" cy="220" r="2"/>
+                            <circle cx="235" cy="212" r="2.5"/><circle cx="245" cy="205" r="2"/><circle cx="255" cy="210" r="2.5"/><circle cx="240" cy="220" r="2"/><circle cx="250" cy="218" r="2"/>
+                        </g>
+
+                        <!-- Mole Layer -->
+                        <g id="overlay-mole" class="hidden pop-in">
+                            <circle cx="235" cy="238" r="9" fill="#18181b" stroke="#e11d48" stroke-width="2"/>
+                            <circle cx="232" cy="235" r="2.5" fill="#ffffff"/>
+                        </g>
+
+                        <!-- Moustache Layer -->
+                        <g id="overlay-moustache" class="hidden pop-in">
+                            <path d="M 200,236 C 180,220 145,232 140,245 C 160,248 185,242 200,238 C 215,242 240,248 260,245 C 255,232 220,220 200,236 Z" fill="#27272a"/>
+                        </g>
+
+                        <!-- Beard Layer -->
+                        <g id="overlay-beard" class="hidden pop-in">
+                            <path d="M 112,210 C 110,280 140,325 200,325 C 260,325 290,280 288,210 C 275,270 240,295 200,295 C 160,295 125,270 112,210 Z" fill="#27272a"/>
+                        </g>
+
+                        <!-- LAYER OVERLAYS: ACCESSORIES -->
+
+                        <!-- Earrings Layer -->
+                        <g id="overlay-earrings" class="hidden pop-in">
+                            <circle cx="104" cy="218" r="6" fill="#fbbf24" stroke="#d97706" stroke-width="1.5"/>
+                            <circle cx="296" cy="218" r="6" fill="#fbbf24" stroke="#d97706" stroke-width="1.5"/>
+                        </g>
+
+                        <!-- Glasses Layer -->
+                        <g id="overlay-glasses" class="hidden pop-in">
+                            <rect x="130" y="160" width="55" height="42" rx="10" fill="none" stroke="#dc2626" stroke-width="5"/>
+                            <rect x="215" y="160" width="55" height="42" rx="10" fill="none" stroke="#dc2626" stroke-width="5"/>
+                            <path d="M 185,178 L 215,178" stroke="#dc2626" stroke-width="5" stroke-linecap="round"/>
+                            <path d="M 130,175 L 105,170" stroke="#dc2626" stroke-width="4"/>
+                            <path d="M 270,175 L 295,170" stroke="#dc2626" stroke-width="4"/>
+                        </g>
+
+                        <!-- Sunglasses Layer -->
+                        <g id="overlay-sunglasses" class="hidden pop-in">
+                            <rect x="128" y="158" width="58" height="44" rx="12" fill="#1e293b" stroke="#0f172a" stroke-width="4"/>
+                            <rect x="214" y="158" width="58" height="44" rx="12" fill="#1e293b" stroke="#0f172a" stroke-width="4"/>
+                            <path d="M 186,176 L 214,176" stroke="#0f172a" stroke-width="6"/>
+                            <path d="M 128,172 L 105,168" stroke="#0f172a" stroke-width="4"/>
+                            <path d="M 272,172 L 295,168" stroke="#0f172a" stroke-width="4"/>
+                            <path d="M 138,166 L 150,192" stroke="#ffffff" stroke-width="3" opacity="0.5" stroke-linecap="round"/>
+                            <path d="M 224,166 L 236,192" stroke="#ffffff" stroke-width="3" opacity="0.5" stroke-linecap="round"/>
+                        </g>
+
+                        <!-- Necklace Layer -->
+                        <g id="overlay-necklace" class="hidden pop-in">
+                            <path d="M 160,360 Q 200,410 240,360" stroke="#f59e0b" stroke-width="4" stroke-dasharray="2,6" stroke-linecap="round" fill="none"/>
+                            <circle cx="200" cy="385" r="9" fill="#06b6d4" stroke="#f59e0b" stroke-width="2"/>
+                        </g>
+
+                        <!-- Scarf Layer -->
+                        <g id="overlay-scarf" class="hidden pop-in">
+                            <path d="M 140,330 C 130,360 160,385 200,385 C 240,385 270,360 260,330 C 280,360 270,410 200,410 C 130,410 120,360 140,330 Z" fill="#e11d48"/>
+                            <path d="M 215,385 L 245,460 L 210,460 Z" fill="#be123c"/>
+                        </g>
+
+                        <!-- Hat Layer -->
+                        <g id="overlay-hat" class="hidden pop-in">
+                            <path d="M 132,118 C 132,45 268,45 268,118 Z" fill="#ca8a04"/>
+                            <path d="M 136,118 C 136,52 264,52 264,118 Z" fill="#eab308"/>
+                            <path d="M 130,106 C 165,96 235,96 270,106 L 271,118 C 235,108 165,108 129,118 Z" fill="#0f172a"/>
+                            <ellipse cx="200" cy="120" rx="118" ry="22" fill="#a16207"/>
+                            <ellipse cx="200" cy="118" rx="115" ry="19" fill="#ca8a04"/>
+                            <ellipse cx="200" cy="116" rx="110" ry="16" fill="#eab308"/>
+                        </g>
+
+                        <!-- Cap Layer -->
+                        <g id="overlay-cap" class="hidden pop-in">
+                            <path d="M 120,110 C 120,50 280,50 280,110 Z" fill="#2563eb"/>
+                            <path d="M 190,110 L 310,110 C 320,110 325,120 310,122 L 180,122 Z" fill="#1d4ed8"/>
+                            <circle cx="200" cy="52" r="5" fill="#f59e0b"/>
+                        </g>
+
+                        <!-- Watch Layer -->
+                        <g id="overlay-watch" class="hidden pop-in">
+                            <rect x="75" y="415" width="40" height="40" rx="8" fill="#0284c7" stroke="#ffffff" stroke-width="2"/>
+                            <circle cx="95" cy="435" r="14" fill="#ffffff"/>
+                            <path d="M 95,435 L 95,426 M 95,435 L 102,435" stroke="#0f172a" stroke-width="2.5" stroke-linecap="round"/>
+                        </g>
+
+                        <!-- Bracelet Layer -->
+                        <g id="overlay-bracelet" class="hidden pop-in">
+                            <rect x="285" y="420" width="38" height="24" rx="12" fill="#ec4899" stroke="#ffffff" stroke-width="2"/>
+                            <circle cx="295" cy="432" r="4" fill="#fbbf24"/>
+                            <circle cx="304" cy="432" r="4" fill="#a855f7"/>
+                            <circle cx="313" cy="432" r="4" fill="#3b82f6"/>
+                        </g>
+
+                        <!-- Belt Layer -->
+                        <g id="overlay-belt" class="hidden pop-in">
+                            <path d="M 112,460 L 288,460 L 288,485 L 112,485 Z" fill="#27272a"/>
+                            <rect x="182" y="455" width="36" height="35" rx="6" fill="#fbbf24" stroke="#d97706" stroke-width="3"/>
+                            <rect x="190" y="462" width="20" height="21" rx="2" fill="#27272a"/>
+                        </g>
+
+                    </svg>
+                </div>
+
+                <!-- ACTION BUTTONS ROW -->
+                <div class="w-full grid grid-cols-3 gap-2 mt-4">
+                    <button onclick="randomizeFeatures()" class="bg-gradient-to-r from-amber-400 to-amber-500 hover:from-amber-500 hover:to-amber-600 text-slate-900 font-bold p-3 rounded-2xl shadow-md transition-all flex flex-col items-center justify-center text-xs md:text-sm">
+                        <i class="fa-solid fa-dice text-lg mb-1"></i>
+                        <span>Randomize</span>
+                    </button>
+
+                    <button id="btn-quiz-mode" onclick="toggleQuizMode()" class="bg-gradient-to-r from-indigo-500 to-purple-600 hover:from-indigo-600 hover:to-purple-700 text-white font-bold p-3 rounded-2xl shadow-md transition-all flex flex-col items-center justify-center text-xs md:text-sm">
+                        <i class="fa-solid fa-mask text-lg mb-1"></i>
+                        <span id="quiz-btn-label">Secret Quiz</span>
+                    </button>
+
+                    <button onclick="resetCanvas()" class="bg-slate-200 hover:bg-slate-300 text-slate-700 font-bold p-3 rounded-2xl shadow-md transition-all flex flex-col items-center justify-center text-xs md:text-sm">
+                        <i class="fa-solid fa-rotate-left text-lg mb-1"></i>
+                        <span>Clear All</span>
+                    </button>
+                </div>
+
+            </div>
+
+            <!-- SECRET QUIZ ANSWER KEY REVEAL PANEL -->
+            <div id="quiz-answer-panel" class="hidden w-full max-w-md bg-slate-900 text-white p-4 rounded-3xl shadow-xl text-center space-y-3">
+                <div class="flex items-center justify-center space-x-2 text-amber-400 font-bold">
+                    <i class="fa-solid fa-key"></i>
+                    <span>Teacher's Answer Key</span>
+                </div>
+                <div id="quiz-answer-content" class="text-sm font-semibold text-slate-200 bg-slate-800 p-3 rounded-2xl border border-slate-700">
+                    <!-- Answer list rendered dynamically -->
+                </div>
+            </div>
+
+        </section>
+
+    </main>
+
+    <!-- DIRECT REAL PHOTO MODAL DIALOG -->
+    <div id="photo-modal" class="fixed inset-0 bg-slate-900/80 backdrop-blur-md z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-white rounded-3xl max-w-lg w-full p-5 md:p-6 shadow-2xl border-4 border-teal-400 pop-in flex flex-col items-center text-center space-y-4 relative">
+            
+            <!-- Close Modal Button -->
+            <button onclick="closePhoto()" class="absolute top-3 right-3 text-slate-400 hover:text-slate-700 bg-slate-100 hover:bg-slate-200 p-2 rounded-full w-9 h-9 flex items-center justify-center font-bold transition-all">
+                ✕
+            </button>
+
+            <!-- Vocabulary Title & Speech Button -->
+            <div class="flex items-center space-x-3 text-teal-700 font-bold text-2xl pt-1">
+                <span id="modal-title">Mole</span>
+                <button id="modal-audio-btn" onclick="speakCurrentModal()" title="Listen" class="bg-teal-100 hover:bg-teal-200 text-teal-800 p-2 rounded-xl text-base transition-all shadow-sm">
+                    <i class="fa-solid fa-volume-high"></i>
+                </button>
+            </div>
+
+            <!-- Clean Photo Display Container -->
+            <div class="w-full aspect-[4/3] rounded-2xl overflow-hidden bg-slate-100 border-2 border-slate-200 flex justify-center items-center shadow-inner relative">
+                <img id="modal-img" src="" alt="Real vocabulary photo" class="w-full h-full object-cover">
+            </div>
+
+            <!-- Example ESL Sentence Banner -->
+            <div id="modal-sentence" class="w-full bg-teal-50 border border-teal-200 text-teal-800 p-3 rounded-2xl text-xs md:text-sm font-semibold flex items-center justify-between">
+                <span id="sentence-text">He has a mole on his cheek.</span>
+                <button onclick="speakCurrentSentence()" class="text-teal-600 hover:text-teal-900 p-1">
+                    <i class="fa-solid fa-volume-low text-sm"></i>
+                </button>
+            </div>
+
+            <!-- Dismiss Button -->
+            <button onclick="closePhoto()" class="w-full bg-teal-500 hover:bg-teal-600 text-white font-bold py-3 rounded-2xl transition-all shadow-md text-base">
+                Got it!
+            </button>
+        </div>
+    </div>
+
+    <!-- FOOTER -->
+    <footer class="bg-slate-100 border-t border-slate-200 p-3 text-center text-xs text-slate-500">
+        Primary ESL Vocabulary Practice • Interactive Whiteboard Activity
+    </footer>
+
+    <!-- JAVASCRIPT LOGIC -->
+    <script>
+        const activeFeatures = {
+            freckles: false,
+            mole: false,
+            dimples: false,
+            beard: false,
+            moustache: false,
+            glasses: false,
+            sunglasses: false,
+            necklace: false,
+            earrings: false,
+            watch: false,
+            bracelet: false,
+            hat: false,
+            cap: false,
+            scarf: false,
+            belt: false
+        };
+
+        let currentPronoun = 'He';
+        let isQuizMode = false;
+        let currentModalItem = '';
+
+        const featureDetails = {
+            mole: {
+                name: 'a Mole',
+                photo: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&w=800&q=80',
+                sentence: 'has a mole under the eye.'
+            },
+            bracelet: {
+                name: 'a Bracelet',
+                photo: 'https://images.unsplash.com/photo-1573408301185-9146fe634ad0?auto=format&fit=crop&w=800&q=80',
+                sentence: 'is wearing a bracelet on the wrist.'
+            },
+            freckles: {
+                name: 'Freckles',
+                photo: 'https://images.unsplash.com/photo-1542383133-359c93195a9d?auto=format&fit=crop&w=800&q=80',
+                sentence: 'has freckles on the nose and cheeks.'
+            },
+            dimples: {
+                name: 'Dimples',
+                photo: 'https://images.unsplash.com/photo-1595152772835-219674b2a8a6?auto=format&fit=crop&w=800&q=80',
+                sentence: 'has dimples when smiling.'
+            },
+            beard: {
+                name: 'a Beard',
+                photo: 'https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?auto=format&fit=crop&w=800&q=80',
+                sentence: 'has a beard around the chin.'
+            },
+            moustache: {
+                name: 'a Moustache',
+                photo: 'https://images.unsplash.com/photo-1583195764036-6dc248ac07d9?auto=format&fit=crop&w=800&q=80',
+                sentence: 'has a moustache above the lip.'
+            },
+            glasses: {
+                name: 'Glasses',
+                photo: 'https://images.unsplash.com/photo-1574258495973-f010dfbb5371?auto=format&fit=crop&w=800&q=80',
+                sentence: 'is wearing glasses to see clearly.'
+            },
+            sunglasses: {
+                name: 'Sunglasses',
+                photo: 'https://images.unsplash.com/photo-1511499767150-a48a237f0083?auto=format&fit=crop&w=800&q=80',
+                sentence: 'is wearing cool sunglasses.'
+            },
+            necklace: {
+                name: 'a Necklace',
+                photo: 'https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?auto=format&fit=crop&w=800&q=80',
+                sentence: 'is wearing a necklace.'
+            },
+            earrings: {
+                name: 'Earrings',
+                photo: 'https://images.unsplash.com/photo-1630019852942-f89202989a59?auto=format&fit=crop&w=800&q=80',
+                sentence: 'is wearing shiny earrings.'
+            },
+            watch: {
+                name: 'a Watch',
+                photo: 'https://images.unsplash.com/photo-1524805444758-089113d48a6d?auto=format&fit=crop&w=800&q=80',
+                sentence: 'is wearing a watch on the wrist.'
+            },
+            hat: {
+                name: 'a Hat',
+                photo: 'https://images.unsplash.com/photo-1572307480813-ceb0e59d8325?auto=format&fit=crop&w=800&q=80',
+                sentence: 'is wearing a hat.'
+            },
+            cap: {
+                name: 'a Cap',
+                photo: 'https://images.unsplash.com/photo-1588850561407-ed78c282e89b?auto=format&fit=crop&w=800&q=80',
+                sentence: 'is wearing a cap.'
+            },
+            scarf: {
+                name: 'a Scarf',
+                photo: 'https://images.unsplash.com/photo-1520903920243-00d872a2d1c9?auto=format&fit=crop&w=800&q=80',
+                sentence: 'is wearing a warm scarf.'
+            },
+            belt: {
+                name: 'a Belt',
+                photo: 'https://images.unsplash.com/photo-1624222247344-550fb60583dc?auto=format&fit=crop&w=800&q=80',
+                sentence: 'is wearing a belt around the waist.'
+            }
+        };
+
+        function toggleFeature(featureKey) {
+            activeFeatures[featureKey] = !activeFeatures[featureKey];
+            updateDisplay();
+        }
+
+        function setPronoun(pronoun) {
+            currentPronoun = pronoun;
+            
+            const btnHe = document.getElementById('btn-he');
+            const btnShe = document.getElementById('btn-she');
+            const hairShort = document.getElementById('hair-style-short');
+            const hairLong = document.getElementById('hair-style-long');
+
+            if (pronoun === 'He') {
+                btnHe.className = "px-5 py-1.5 rounded-xl font-bold transition-all bg-yellow-400 text-slate-900 shadow";
+                btnShe.className = "px-5 py-1.5 rounded-xl font-bold transition-all text-white hover:bg-white/20";
+                if (hairShort) hairShort.classList.remove('hidden');
+                if (hairLong) hairLong.classList.add('hidden');
+            } else {
+                btnShe.className = "px-5 py-1.5 rounded-xl font-bold transition-all bg-yellow-400 text-slate-900 shadow";
+                btnHe.className = "px-5 py-1.5 rounded-xl font-bold transition-all text-white hover:bg-white/20";
+                if (hairShort) hairShort.classList.add('hidden');
+                if (hairLong) hairLong.classList.remove('hidden');
+            }
+
+            if (isQuizMode) updateQuizAnswerKey();
+        }
+
+        function updateDisplay() {
+            Object.keys(activeFeatures).forEach(key => {
+                const isSelected = activeFeatures[key];
+                const overlay = document.getElementById(`overlay-${key}`);
+                const card = document.getElementById(`card-${key}`);
+
+                if (overlay) {
+                    if (isSelected) overlay.classList.remove('hidden');
+                    else overlay.classList.add('hidden');
+                }
+
+                if (card) {
+                    if (isSelected) {
+                        card.classList.remove('bg-slate-50', 'border-slate-200');
+                        card.classList.add('bg-teal-100', 'border-teal-500', 'shadow-sm');
+                    } else {
+                        card.classList.add('bg-slate-50', 'border-slate-200');
+                        card.classList.remove('bg-teal-100', 'border-teal-500', 'shadow-sm');
+                    }
+                }
+            });
+
+            if (isQuizMode) updateQuizAnswerKey();
+        }
+
+        // Display simple clean photo modal dialog
+        function showPhoto(key) {
+            const item = featureDetails[key];
+            if (!item) return;
+
+            currentModalItem = key;
+
+            const cleanTitle = item.name.replace(/^a\s+/i, '');
+            document.getElementById('modal-title').textContent = cleanTitle.charAt(0).toUpperCase() + cleanTitle.slice(1);
+            
+            const imgEl = document.getElementById('modal-img');
+            imgEl.src = item.photo;
+
+            document.getElementById('sentence-text').textContent = `${currentPronoun} ${item.sentence}`;
+
+            document.getElementById('photo-modal').classList.remove('hidden');
+            speakText(item.name);
+        }
+
+        function closePhoto() {
+            document.getElementById('photo-modal').classList.add('hidden');
+        }
+
+        function speakCurrentModal() {
+            if (currentModalItem && featureDetails[currentModalItem]) {
+                speakText(featureDetails[currentModalItem].name);
+            }
+        }
+
+        function speakCurrentSentence() {
+            const text = document.getElementById('sentence-text').textContent;
+            if (text) speakText(text);
+        }
+
+        function randomizeFeatures() {
+            Object.keys(activeFeatures).forEach(key => {
+                activeFeatures[key] = Math.random() < 0.35;
+            });
+
+            const keys = Object.keys(activeFeatures);
+            if (!keys.some(k => activeFeatures[k])) {
+                activeFeatures['glasses'] = true;
+                activeFeatures['freckles'] = true;
+            }
+
+            updateDisplay();
+        }
+
+        function toggleQuizMode() {
+            isQuizMode = !isQuizMode;
+            const badge = document.getElementById('quiz-badge');
+            const btnLabel = document.getElementById('quiz-btn-label');
+            const answerPanel = document.getElementById('quiz-answer-panel');
+
+            if (isQuizMode) {
+                badge.classList.remove('hidden');
+                answerPanel.classList.remove('hidden');
+                btnLabel.textContent = "Exit Quiz";
+                randomizeFeatures();
+            } else {
+                badge.classList.add('hidden');
+                answerPanel.classList.add('hidden');
+                btnLabel.textContent = "Secret Quiz";
+            }
+        }
+
+        function updateQuizAnswerKey() {
+            const activeList = [];
+            Object.keys(activeFeatures).forEach(key => {
+                if (activeFeatures[key]) {
+                    activeList.push(featureDetails[key].name);
+                }
+            });
+
+            const content = document.getElementById('quiz-answer-content');
+            if (activeList.length === 0) {
+                content.textContent = "No extra features selected.";
+            } else {
+                content.textContent = `${currentPronoun}: ` + activeList.join(', ');
+            }
+        }
+
+        function resetCanvas() {
+            Object.keys(activeFeatures).forEach(key => {
+                activeFeatures[key] = false;
+            });
+            updateDisplay();
+        }
+
+        function speakText(text) {
+            if ('speechSynthesis' in window) {
+                window.speechSynthesis.cancel();
+                const utterance = new SpeechSynthesisUtterance(text);
+                utterance.rate = 0.85;
+                utterance.pitch = 1.0;
+                window.speechSynthesis.speak(utterance);
+            }
+        }
+
+        window.onload = function() {
+            updateDisplay();
+        };
+    </script>
+</body>
+</html>
